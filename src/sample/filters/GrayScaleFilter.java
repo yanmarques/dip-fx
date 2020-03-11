@@ -43,7 +43,7 @@ public class GrayScaleFilter {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 Color oldColor = pR.getColor(i, j);
-                double average = this.calScale(oldColor);
+                double average = this.calcScale(oldColor);
                 Color newColor = new Color(average, average, average, oldColor.getOpacity());
                 pW.setColor(i, j, newColor);
             }
@@ -52,7 +52,7 @@ public class GrayScaleFilter {
         return wI;
     }
 
-    protected double calScale(Color oldColor) {
+    protected double calcScale(Color oldColor) {
         return (oldColor.getRed() + oldColor.getGreen() + oldColor.getBlue()) / 3;
     }
 }
