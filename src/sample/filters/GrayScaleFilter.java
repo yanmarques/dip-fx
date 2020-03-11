@@ -5,12 +5,13 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import sample.logging.LogUtil;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GrayScaleFilter {
-    private static final Logger logger = Logger.getLogger(GrayScaleFilter.class.getName());
+    private static final Logger logger = LogUtil.getLogger(GrayScaleFilter.class.getName());
 
     private Image image;
 

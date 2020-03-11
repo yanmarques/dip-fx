@@ -8,10 +8,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import sample.filters.GrayScaleFilter;
+import sample.logging.LogUtil;
 
 import java.io.File;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,20 +33,13 @@ public class Controller {
     @FXML
     private TextField txtBlue;
 
-    private static final Logger logger = Logger.getLogger(Controller.class.getName());
-    private static final Level logLevel = Level.ALL;
+    private static final Logger logger = LogUtil.getLogger(Controller.class.getName());
 
     private Image sourceImg;
     private Image targetImg;
     private Image destImg;
 
     public void initialize() {
-        Handler handlerObj = new ConsoleHandler();
-        handlerObj.setLevel(logLevel);
-        logger.addHandler(handlerObj);
-        logger.setLevel(logLevel);
-        logger.setUseParentHandlers(false);
-
         logger.log(Level.FINEST, "new log level: {0}", logger.getLevel());
         logger.info("starting window...");
     }
