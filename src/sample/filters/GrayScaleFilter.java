@@ -5,23 +5,25 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import sample.Logger;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GrayScaleFilter {
-    private Image image;
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(GrayScaleFilter.class.getName());
 
-    public GrayScaleFilter(Logger logger, Image image) {
+    private Image image;
+
+    public GrayScaleFilter(Image image) {
         this.image = image;
-        this.logger = logger;
     }
 
     public Image run() {
         try {
-            this.logger.info("initializing gray scale filter");
+            logger.info("initializing gray scale filter");
             return this.doRun();
         } catch (Exception exc) {
-            this.logger.error(exc);
+            logger.log(Level.SEVERE, exc.toString(), exc);
         }
 
         return null;
@@ -31,7 +33,7 @@ public class GrayScaleFilter {
         int height = (int)this.image.getHeight();
         int width = (int)this.image.getWidth();
 
-        this.logger.info("got image info. Height: " + height + " / Width: " + width);
+        logger.fine("got image info. Height: " + height + " / Width: " + width);
 
         PixelReader pR = this.image.getPixelReader();
         WritableImage wI = new WritableImage(width, height);
