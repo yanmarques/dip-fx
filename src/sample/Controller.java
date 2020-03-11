@@ -84,7 +84,7 @@ public class Controller {
 
     protected void setPixelColor(Image image, int mouseX, int mouseY) {
         try {
-            Color color = image.getPixelReader().getColor(mouseX - 1, mouseY - 1);
+            Color color = this.getImagePixelColor(image, mouseX, mouseY);
             logger.log(Level.FINEST, "setting pixel color: {0}", color.toString());
             setColorText(txtRed, color.getRed());
             setColorText(txtGreen, color.getGreen());
@@ -92,6 +92,18 @@ public class Controller {
         } catch (Exception exc) {
             logger.log(Level.SEVERE, exc.toString(), exc);
         }
+    }
+
+    protected Color getImagePixelColor(Image image, int mouseX, int mouseY) {
+        if (mouseX > 0) {
+            mouseX -= 1;
+        }
+
+        if (mouseY > 0) {
+            mouseY -= 1;
+        }
+
+        return image.getPixelReader().getColor(mouseX, mouseY);
     }
 
     protected void setColorText(TextField field, double color) {
