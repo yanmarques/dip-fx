@@ -34,7 +34,7 @@ public class GrayScaleFilter {
         int height = (int)this.image.getHeight();
         int width = (int)this.image.getWidth();
 
-        logger.fine("got image info. Height: " + height + " / Width: " + width);
+        logger.log(Level.FINE, "got image resolution: {0}x{1}", new Object[]{width, height});
 
         PixelReader pR = this.image.getPixelReader();
         WritableImage wI = new WritableImage(width, height);
