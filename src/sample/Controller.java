@@ -66,7 +66,7 @@ public class Controller {
         if (this.sourceView.getImage() == null) {
             logger.warning("gray-scale: no source image found");
         } else {
-            destView.setImage(new GrayScaleFilter(this.sourceView.getImage()).run());
+            this.updateView(destView, new GrayScaleFilter(this.sourceView.getImage()).run());
         }
     }
 
@@ -105,9 +105,7 @@ public class Controller {
             URI fileUri = file.toURI();
             logger.log(Level.FINE, "file chosen: {0}", fileUri.getPath());
             Image source = new Image(fileUri.toString());
-            view.setImage(source);
-            view.setFitHeight(source.getHeight());
-            view.setFitWidth(source.getWidth());
+            this.updateView(view, source);
         }
     }
 
@@ -124,5 +122,11 @@ public class Controller {
         }
 
         return null;
+    }
+
+    protected void updateView(ImageView view, Image source) {
+        view.setImage(source);
+        view.setFitHeight(source.getHeight());
+        view.setFitWidth(source.getWidth());
     }
 }
