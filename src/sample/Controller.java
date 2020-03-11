@@ -82,7 +82,7 @@ public class Controller {
         txtBlue.setText("");
     }
 
-    public void setPixelColor(Image image, int mouseX, int mouseY) {
+    protected void setPixelColor(Image image, int mouseX, int mouseY) {
         try {
             Color color = image.getPixelReader().getColor(mouseX - 1, mouseY - 1);
             logger.log(Level.FINEST, "setting pixel color: {0}", color.toString());
@@ -99,7 +99,7 @@ public class Controller {
         field.setText(Integer.toString(value));
     }
 
-    public void updateViewFromFilesystem(ImageView view) {
+    protected void updateViewFromFilesystem(ImageView view) {
         File file = chooseImage();
         if (file != null) {
             URI fileUri = file.toURI();
@@ -109,7 +109,7 @@ public class Controller {
         }
     }
 
-    public File chooseImage() {
+    protected File chooseImage() {
         FileChooser chooser = new FileChooser();
 //        chooser.getExtensionFilters().add(
 //                new FileChooser.ExtensionFilter("images", ".jpg", "png", ".bmp", ".PNG", ".JPG", ".BMP"));
