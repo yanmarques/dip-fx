@@ -123,8 +123,8 @@ public class Controller {
 
     protected File chooseImage() {
         FileChooser chooser = new FileChooser();
-//        chooser.getExtensionFilters().add(
-//                new FileChooser.ExtensionFilter("images", ".jpg", "png", ".bmp", ".PNG", ".JPG", ".BMP"));
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("images", "*.jpg", "*.png", "*.bmp", "*.PNG", "*.JPG", "*.BMP"));
 
         try {
             logger.info("opening file chooser...");
