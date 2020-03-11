@@ -11,6 +11,7 @@ import sample.filters.GrayScaleFilter;
 import sample.logging.LogUtil;
 
 import java.io.File;
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,10 +36,6 @@ public class Controller {
 
     private static final Logger logger = LogUtil.getLogger(Controller.class.getName());
 
-    private Image sourceImg;
-    private Image targetImg;
-    private Image destImg;
-
     public void initialize() {
         logger.log(Level.FINEST, "new log level: {0}", logger.getLevel());
         logger.info("starting window...");
@@ -56,20 +53,20 @@ public class Controller {
 
     @FXML
     public void openSourceImage() {
-        this.sourceImg = this.setImage(sourceView, sourceImg);
+        this.updateViewFromFilesystem(sourceView);
     }
 
     @FXML
     public void openTargetImage() {
-        this.targetImg = this.setImage(targetView, targetImg);
+        this.updateViewFromFilesystem(targetView);
     }
 
     @FXML
     public void grayScale() {
-        if (this.sourceImg != null) {
-            destView.setImage(new GrayScaleFilter(this.sourceImg).run());
-        } else {
+        if (this.sourceView.getImage() == null) {
             logger.warning("gray-scale: no source image found");
+        } else {
+            destView.setImage(new GrayScaleFilter(this.sourceView.getImage()).run());
         }
     }
 
@@ -102,18 +99,16 @@ public class Controller {
         field.setText(Integer.toString(value));
     }
 
-    public Image setImage(ImageView view, Image source) {
+    public void updateViewFromFilesystem(ImageView view) {
         File file = chooseImage();
         if (file != null) {
-            logger.log(Level.FINE, "file chosen: {0}", file.toURI().getPath());
-            source = new Image(file.toURI().toString());
+            URI fileUri = file.toURI();
+            logger.log(Level.FINE, "file chosen: {0}", fileUri.getPath());
+            Image source = new Image(fileUri.toString());
             view.setImage(source);
             view.setFitHeight(source.getHeight());
             view.setFitWidth(source.getWidth());
-            return source;
         }
-
-        return null;
     }
 
     public File chooseImage() {
