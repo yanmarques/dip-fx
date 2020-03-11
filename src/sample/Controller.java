@@ -117,6 +117,12 @@ public class Controller {
             URI fileUri = file.toURI();
             logger.log(Level.FINE, "file chosen: {0}", fileUri.getPath());
             Image source = new Image(fileUri.toString());
+
+            // TODO add better handling of images with error
+            if (source.isError()) {
+                logger.warning("chosen image not seems right");
+            }
+
             this.updateView(view, source);
         }
     }
