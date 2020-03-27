@@ -29,7 +29,7 @@ public class MouseInput {
     }
 
     public boolean toPixel() {
-        if (this.raw) {
+        if (!this.isRaw()) {
             return false;
         }
 
@@ -40,6 +40,9 @@ public class MouseInput {
         if (axisY > 0) {
             axisY -= 1;
         }
+
+        // future calls to this will be blocked
+        this.raw = false;
 
         return true;
     }
