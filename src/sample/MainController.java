@@ -106,20 +106,7 @@ abstract public class MainController {
 
     @FXML
     public void grayScale() {
-        if (this.sourceView.getImage() == null) {
-            logger.warning("gray-scale: no source image found");
-        } else {
-            if (this.filters.get("gray-scale") != null) {
-                Image grayScaled = this.filters.get("gray-scale").run(this.sourceView.getImage());
-                if (grayScaled == null) {
-                    logger.warning("failed to gray scale image");
-                } else {
-                    this.updateView(destView, grayScaled, txtDestGeometry);
-                }
-            } else {
-                this.informMissingFilter("gray-scale");
-            }
-        }
+        this.withFilter("gray-scale");
     }
 
     @FXML
@@ -201,9 +188,22 @@ abstract public class MainController {
         }
     }
 
-    protected void informMissingFilter(String name) {
-        logger.severe("Filter is not registered: " + name);
-        logger.severe("Use filters HashMap to register");
+    protected void withFilter(String filterName) {
+        if (this.sourceView.getImage() == null) {
+            logger.warning(filterName + ": no source image found");
+        } else {
+            if (this.filters.get(filterName) == null) {
+                logger.severe("Filter is not registered: " + filterName);
+                logger.severe("Use filters HashMap to register");
+            } else {
+                Image resultImg = this.filters.get(filterName).run(this.sourceView.getImage());
+                if (resultImg == null) {
+                    logger.warning(filterName + ": failed to filter image");
+                } else {
+                    this.updateView(destView, resultImg, txtDestGeometry);
+                }
+            }
+        }
     }
 
     protected File chooseImage(boolean isSaving) {
