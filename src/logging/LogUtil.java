@@ -1,4 +1,4 @@
-package sample.logging;
+package logging;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;

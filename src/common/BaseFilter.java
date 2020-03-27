@@ -1,8 +1,8 @@
-package sample.common;
+package common;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import sample.logging.LogUtil;
+import logging.LogUtil;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -1,5 +1,8 @@
-package sample;
+package graphics;
 
+import common.BaseFilter;
+import common.MouseInput;
+import common.ViewToOutput;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -7,8 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import sample.common.BaseFilter;
-import sample.logging.LogUtil;
+import logging.LogUtil;
 
 import java.io.File;
 import java.net.URI;

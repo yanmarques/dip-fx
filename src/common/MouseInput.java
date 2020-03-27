@@ -1,8 +1,8 @@
-package sample;
+package common;
 
 import javafx.scene.input.MouseEvent;
 
-public class MouseInput {
+public class    MouseInput {
     private int axisX;
     private int axisY;
     private boolean raw = true;
