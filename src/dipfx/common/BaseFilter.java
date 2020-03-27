@@ -1,8 +1,7 @@
-package common;
+package dipfx.common;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import logging.LogUtil;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -1,8 +1,9 @@
-package graphics;
+package dipfx.graphics;
 
-import common.BaseFilter;
-import common.MouseInput;
-import common.ViewToOutput;
+import dipfx.common.BaseFilter;
+import dipfx.common.LogUtil;
+import dipfx.common.MouseInput;
+import dipfx.common.ViewToOutput;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -10,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import logging.LogUtil;
 
 import java.io.File;
 import java.net.URI;

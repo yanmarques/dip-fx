@@ -1,4 +1,4 @@
-package common;
+package dipfx.common;
 
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;

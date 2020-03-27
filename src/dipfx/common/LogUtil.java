@@ -1,4 +1,4 @@
-package logging;
+package dipfx.common;
 
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;

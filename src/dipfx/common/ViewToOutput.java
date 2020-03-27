@@ -1,8 +1,7 @@
-package common;
+package dipfx.common;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
-import logging.LogUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;

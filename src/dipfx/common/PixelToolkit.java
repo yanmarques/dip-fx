@@ -1,4 +1,4 @@
-package common;
+package dipfx.common;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -6,7 +6,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
-import logging.LogUtil;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
