@@ -1,10 +1,9 @@
 package dipfx.graphics;
 
-import dipfx.common.BaseFilter;
-import dipfx.common.LogUtil;
-import dipfx.common.MouseInput;
-import dipfx.common.ViewToOutput;
+import dipfx.common.*;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +13,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,9 +37,10 @@ abstract public class MainController {
     @FXML
     private TextField txtBlue;
 
-    protected static final Logger logger = LogUtil.getLogger(MainController.class.getName());
-    protected ViewToOutput viewToOutput;
-    protected HashMap<String, BaseFilter> filters = new HashMap<>();
+    protected SliderUnit redSliderUnit;
+    protected SliderUnit greenSliderUnit;
+    protected SliderUnit blueSliderUnit;
+    protected SliderUnit thresholdUnit;
     @FXML
     private TextField txtMouseX;
     @FXML
@@ -50,6 +51,26 @@ abstract public class MainController {
     private TextField txtTargetGeometry;
     @FXML
     private TextField txtDestGeometry;
+    @FXML
+    private Slider redSlider;
+    @FXML
+    private Slider greenSlider;
+    @FXML
+    private Slider blueSlider;
+    @FXML
+    private Label lblRedScale;
+
+    protected static final Logger logger = LogUtil.getLogger(MainController.class.getName());
+    protected ViewToOutput viewToOutput;
+    protected HashMap<String, BaseFilter> filters = new HashMap<>();
+    @FXML
+    private Label lblGreenScale;
+    @FXML
+    private Label lblBlueScale;
+    @FXML
+    private Slider thresholdSlider;
+    @FXML
+    private Label lblThreshold;
 
     abstract public void setPixelColor(Image image, Color color);
 
@@ -107,8 +128,22 @@ abstract public class MainController {
     }
 
     @FXML
-    public void grayScale() {
-        this.withFilter("gray-scale");
+    public void arithmeticGrayScale() {
+        this.withFilter("arithmetic-gray-scale");
+    }
+
+    @FXML
+    public void weightedGrayScale() {
+        this.withFilter("weighted-gray-scale");
+    }
+
+    @FXML
+    public void negativeScale() {
+        this.withFilter("negative-scale");
+    }
+
+    public void thresholding(Unit thresholdUnit) {
+        this.withFilter("threshold");
     }
 
     @FXML
@@ -148,6 +183,25 @@ abstract public class MainController {
 
     protected void setupServices() {     // called on JavaFx initialize
         this.viewToOutput = new ViewToOutput(this.sourceView, this.destView);
+
+        this.redSliderUnit = new SliderUnit(this.redSlider, this.lblRedScale);
+        this.greenSliderUnit = new SliderUnit(this.greenSlider, this.lblGreenScale);
+        this.blueSliderUnit = new SliderUnit(this.blueSlider, this.lblBlueScale);
+
+        ArrayList<Unit> sliders = new ArrayList<>();
+        sliders.add(this.redSliderUnit);
+        sliders.add(this.greenSliderUnit);
+        sliders.add(this.blueSliderUnit);
+
+        // no need to keep it, Units will take care of auto-checking
+        new MaxValueDistribution(100, sliders);
+
+        // maximum value, must covered on filter side
+        // TODO for performance reasons, I am sure there is a better method
+        this.thresholdSlider.setMax(255);
+
+        this.thresholdUnit = new SliderUnit(this.thresholdSlider, this.lblThreshold);
+        this.thresholdUnit.setOnValueChanged(this::thresholding);
     }
 
     protected void handleDisplayPixelFromContext(Image image, MouseInput mouseInput) {
