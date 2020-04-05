@@ -63,6 +63,7 @@ abstract public class MainController {
     protected static final Logger logger = LogUtil.getLogger(MainController.class.getName());
     protected ViewToOutput viewToOutput;
     protected HashMap<String, BaseFilter> filters = new HashMap<>();
+    private MouseEvent sourceMark;
     @FXML
     private Label lblGreenScale;
     @FXML
@@ -77,6 +78,8 @@ abstract public class MainController {
     abstract public Color getImagePixelColor(Image image, int mouseX, int mouseY);
 
     abstract public int colorToDecimal(double color);
+
+    abstract public Image onImageMark(MouseInput srcInput, MouseInput dstInput, Image image);
 
     public void initialize() {
         logger.info("initiliazing services...");
@@ -115,6 +118,17 @@ abstract public class MainController {
         if (target != null) {
             this.handleDisplayPixelFromContext(target, new MouseInput(event));
         }
+    }
+
+    @FXML
+    public void registerMousePressed(MouseEvent event) {
+        logger.fine("source view: mouse pressed");
+        this.sourceMark = event;
+    }
+
+    @FXML void registerMouseReleased(MouseEvent event) {
+        logger.fine("source view: mouse released");
+        this.handleImageMark(event);
     }
 
     @FXML
@@ -236,6 +250,23 @@ abstract public class MainController {
         txtMouseY.setText(Integer.toString(mouseInput.getAxisY()));
 
         return this.getImagePixelColor(image, mouseInput.getAxisX(), mouseInput.getAxisY());
+    }
+
+    protected void handleImageMark(MouseEvent event) {
+        if (this.sourceMark != null) {
+            MouseInput srcInput = new MouseInput(this.sourceMark);
+            srcInput.toPixel();
+
+            MouseInput dstInput = new MouseInput(event);
+            dstInput.toPixel();
+
+            Image markedImg = this.onImageMark(srcInput, dstInput, this.sourceView.getImage());
+            if (markedImg == null) {
+                logger.warning("image mark: failed to get marked image");
+            } else {
+                this.sourceView.setImage(markedImg);
+            }
+        }
     }
 
     protected void setColorText(TextField field, double color) {
