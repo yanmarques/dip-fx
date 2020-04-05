@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LogUtil {
-    private static final Level defaultLevel = Level.FINEST;
+    public static Level defaultLevel = Level.FINEST;
 
     public static Logger getLogger(String name, Level level) {
         Logger logger = Logger.getLogger(name);
