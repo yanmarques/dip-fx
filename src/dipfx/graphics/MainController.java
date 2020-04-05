@@ -142,6 +142,21 @@ abstract public class MainController {
         this.withFilter("negative-scale");
     }
 
+    @FXML
+    public void noiseInCross() {
+        this.withFilter("cross-noise");
+    }
+
+    @FXML
+    public void noiseInX() {
+        this.withFilter("in-x-noise");
+    }
+
+    @FXML
+    public void noiseInSquare() {
+        this.withFilter("square-noise");
+    }
+
     public void thresholding(Unit thresholdUnit) {
         this.withFilter("threshold");
     }
