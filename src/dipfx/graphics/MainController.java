@@ -1,6 +1,7 @@
 package dipfx.graphics;
 
 import dipfx.common.*;
+import dipfx.common.multiImg.MixedContextFilter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -37,10 +38,12 @@ abstract public class MainController {
     @FXML
     private TextField txtBlue;
 
-    protected SliderUnit redSliderUnit;
-    protected SliderUnit greenSliderUnit;
-    protected SliderUnit blueSliderUnit;
-    protected SliderUnit thresholdUnit;
+    protected LabelAutoChangeSliderUnit redSliderUnit;
+    protected LabelAutoChangeSliderUnit greenSliderUnit;
+    protected LabelAutoChangeSliderUnit blueSliderUnit;
+    protected LabelAutoChangeSliderUnit thresholdUnit;
+    protected SimpleSliderUnit srcMultiImgUnit;
+    protected SimpleSliderUnit dstMultiImgUnit;
     @FXML
     private TextField txtMouseX;
     @FXML
@@ -59,10 +62,15 @@ abstract public class MainController {
     private Slider blueSlider;
     @FXML
     private Label lblRedScale;
+    protected HashMap<String, PixelContextFilter> filters = new HashMap<>();
+    protected HashMap<String, MixedContextFilter> multiImgFilters = new HashMap<>();
 
     protected static final Logger logger = LogUtil.getLogger(MainController.class.getName());
     protected ViewToOutput viewToOutput;
-    protected HashMap<String, BaseFilter> filters = new HashMap<>();
+    @FXML
+    private Slider srcMultiImgSlider;
+    @FXML
+    private Slider dstMultiImgSlider;
     private MouseEvent sourceMark;
     @FXML
     private Label lblGreenScale;
@@ -171,6 +179,16 @@ abstract public class MainController {
         this.withFilter("square-noise");
     }
 
+    @FXML
+    public void addMultiImages() {
+        this.withMultiImgFilter("add-multi-image");
+    }
+
+    @FXML
+    public void subMultiImages() {
+        this.withMultiImgFilter("sub-multi-image");
+    }
+
     public void thresholding(Unit thresholdUnit) {
         this.withFilter("threshold");
     }
@@ -213,24 +231,9 @@ abstract public class MainController {
     protected void setupServices() {     // called on JavaFx initialize
         this.viewToOutput = new ViewToOutput(this.sourceView, this.destView);
 
-        this.redSliderUnit = new SliderUnit(this.redSlider, this.lblRedScale);
-        this.greenSliderUnit = new SliderUnit(this.greenSlider, this.lblGreenScale);
-        this.blueSliderUnit = new SliderUnit(this.blueSlider, this.lblBlueScale);
-
-        ArrayList<Unit> sliders = new ArrayList<>();
-        sliders.add(this.redSliderUnit);
-        sliders.add(this.greenSliderUnit);
-        sliders.add(this.blueSliderUnit);
-
-        // no need to keep it, Units will take care of auto-checking
-        new MaxValueDistribution(100, sliders);
-
-        // maximum value, must covered on filter side
-        // TODO for performance reasons, I am sure there is a better method
-        this.thresholdSlider.setMax(255);
-
-        this.thresholdUnit = new SliderUnit(this.thresholdSlider, this.lblThreshold);
-        this.thresholdUnit.setOnValueChanged(this::thresholding);
+        this.registerChannelSliders();
+        this.registerThresholdSliders();
+        this.registerMultiImageSliders();
     }
 
     protected void handleDisplayPixelFromContext(Image image, MouseInput mouseInput) {
@@ -291,19 +294,52 @@ abstract public class MainController {
     }
 
     protected void withFilter(String filterName) {
-        if (this.sourceView.getImage() == null) {
-            logger.warning(filterName + ": no source image found");
+        if (! this.filters.containsKey(filterName)) {
+            logger.log(Level.SEVERE, "Filter is not registered: {0}", filterName);
+            logger.severe("Use filters HashMap to register");
+            return;
+        }
+
+        if (sourceView.getImage() == null) {
+            logger.log(Level.SEVERE, "{0} : source image is empty", filterName);
+            return;
+        }
+
+        PixelContextFilter filter = this.filters.get(filterName);
+        Image resultImg = filter.run(this.sourceView.getImage());
+        if (resultImg == null) {
+            logger.warning(filterName + ": failed to filter image");
         } else {
-            if (this.filters.get(filterName) == null) {
-                logger.severe("Filter is not registered: " + filterName);
-                logger.severe("Use filters HashMap to register");
+            this.updateView(destView, resultImg, txtDestGeometry);
+        }
+    }
+
+    protected void withMultiImgFilter(String filterName) {
+        if (! this.multiImgFilters.containsKey(filterName)) {
+            logger.log(Level.SEVERE, "Multi image filter is not registered: {0}", filterName);
+            logger.severe("Use multiImgFilters HashMap to register");
+            return;
+        }
+
+        boolean failed = false;
+
+        if (sourceView.getImage() == null) {
+            logger.log(Level.SEVERE, "{0} : source image is empty", filterName);
+            failed = true;
+        }
+
+        if (targetView.getImage() == null) {
+            logger.log(Level.SEVERE, "{0} : target image is empty", filterName);
+            failed = true;
+        }
+
+        if (! failed) {
+            MixedContextFilter filter = this.multiImgFilters.get(filterName);
+            Image resultImg = filter.run(this.sourceView.getImage(), this.targetView.getImage());
+            if (resultImg == null) {
+                logger.warning(filterName + ": failed to filter image");
             } else {
-                Image resultImg = this.filters.get(filterName).run(this.sourceView.getImage());
-                if (resultImg == null) {
-                    logger.warning(filterName + ": failed to filter image");
-                } else {
-                    this.updateView(destView, resultImg, txtDestGeometry);
-                }
+                this.updateView(destView, resultImg, txtDestGeometry);
             }
         }
     }
@@ -335,5 +371,37 @@ abstract public class MainController {
         view.setFitWidth(width);
 
         geometryText.setText((int) width + "x" + (int) height);
+    }
+
+    protected void registerChannelSliders() {
+        this.redSliderUnit = new LabelAutoChangeSliderUnit(this.redSlider, this.lblRedScale);
+        this.greenSliderUnit = new LabelAutoChangeSliderUnit(this.greenSlider, this.lblGreenScale);
+        this.blueSliderUnit = new LabelAutoChangeSliderUnit(this.blueSlider, this.lblBlueScale);
+
+        ArrayList<Unit> sliders = new ArrayList<>();
+        sliders.add(this.redSliderUnit);
+        sliders.add(this.greenSliderUnit);
+        sliders.add(this.blueSliderUnit);
+
+        // no need to keep it, Units will take care of auto-checking
+        new MaxValueDistribution(100, sliders);
+    }
+
+    protected void registerThresholdSliders() {
+        this.thresholdSlider.setMax(255);
+
+        this.thresholdUnit = new LabelAutoChangeSliderUnit(this.thresholdSlider, this.lblThreshold);
+        this.thresholdUnit.setOnValueChanged(this::thresholding);
+    }
+
+    protected void registerMultiImageSliders() {
+        this.srcMultiImgUnit = new SimpleSliderUnit(this.srcMultiImgSlider);
+        this.dstMultiImgUnit = new SimpleSliderUnit(this.dstMultiImgSlider);
+
+        ArrayList<Unit> sliders = new ArrayList<>();
+        sliders.add(this.srcMultiImgUnit);
+        sliders.add(this.dstMultiImgUnit);
+
+        new MaxValueDistribution(100, sliders);
     }
 }

@@ -24,9 +24,8 @@ public class PixelContext {
         int width = (int) image.getWidth();
 
         this.geometry = new Integer[]{width, height};
-        this.pixelReader = image.getPixelReader();
-        this.image = new WritableImage(width, height);
-        this.pixelWriter = this.image.getPixelWriter();
+
+        this.setPixelHelpers();
     }
 
     public PixelContext(Image image) {
@@ -71,5 +70,11 @@ public class PixelContext {
 
     public PixelWriter getPixelWriter() {
         return pixelWriter;
+    }
+
+    protected void setPixelHelpers() {
+        this.pixelReader = this.getOriginalImage().getPixelReader();
+        this.image = new WritableImage(getGeometry()[0], getGeometry()[1]);
+        this.pixelWriter = this.getImage().getPixelWriter();
     }
 }

@@ -1,23 +1,20 @@
 package dipfx.common;
 
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-public class SliderUnit implements Unit {
-    private static Logger logger = LogUtil.getLogger(SliderUnit.class.getName());
+public class SimpleSliderUnit implements Unit {
+    private static Logger logger = LogUtil.getLogger(LabelAutoChangeSliderUnit.class.getName());
 
     private Slider slider;
-    private Label label;
     private int value;
     private Consumer<Unit> unitConsumer;
 
-    public SliderUnit(Slider slider, Label label) {
+    public SimpleSliderUnit(Slider slider) {
         this.slider = slider;
-        this.label = label;
         this.slider.setOnMouseReleased(this::onValueChanged);
         this.setValue(0);
     }
@@ -35,7 +32,9 @@ public class SliderUnit implements Unit {
     public void setValue(int value, boolean updateSlider) {
         logger.fine("recv new value: " + value);
         this.value = value;
-        this.update(updateSlider);
+        if (updateSlider) {
+            this.slider.adjustValue(value);
+        }
     }
 
     @Override
@@ -50,12 +49,5 @@ public class SliderUnit implements Unit {
         } else {
             this.unitConsumer.accept(this);
         }
-    }
-
-    protected void update(boolean withSlider) {
-        if (withSlider) {
-            this.slider.adjustValue(this.getValue());
-        }
-        this.label.setText(String.valueOf(this.value));
     }
 }
