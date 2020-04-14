@@ -3,6 +3,7 @@ package dipfx.graphics;
 import dipfx.common.*;
 import dipfx.common.multiImg.MixedContextFilter;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -11,8 +12,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +92,8 @@ abstract public class MainController {
 
     abstract public Image onImageMark(MouseInput srcInput, MouseInput dstInput, Image image);
 
+    abstract public BaseHistogramController getHistogramController();
+
     public void initialize() {
         logger.info("initiliazing services...");
 
@@ -137,6 +142,18 @@ abstract public class MainController {
     @FXML void registerMouseReleased(MouseEvent event) {
         logger.fine("source view: mouse released");
         this.handleImageMark(event);
+    }
+
+    @FXML void buildHistogram() {
+        if (sourceView.getImage() == null && destView.getImage() == null && targetView.getImage() == null) {
+            logger.warning("Can not build a histogram with all images empty");
+        } else {
+            try {
+                this.openHistogramModal();
+            } catch (IOException exception) {
+                logger.log(Level.SEVERE, exception.toString(), exception);
+            }
+        }
     }
 
     @FXML
@@ -403,5 +420,17 @@ abstract public class MainController {
         sliders.add(this.dstMultiImgUnit);
 
         new MaxValueDistribution(100, sliders);
+    }
+
+    protected void openHistogramModal() throws IOException {
+        Stage stage = new Stage();
+        BaseHistogramController controller = this.getHistogramController();
+        controller.setSource(sourceView.getImage());
+        controller.setDestination(destView.getImage());
+        controller.setTarget(targetView.getImage());
+        stage.setScene(new Scene(AppLoader.loadHistogram(controller), 800, 600));
+        stage.initOwner(this.sourceView.getScene().getWindow());
+        stage.setTitle("Histogramas");
+        stage.show();
     }
 }

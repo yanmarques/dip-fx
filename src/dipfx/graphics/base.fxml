@@ -302,7 +302,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button layoutX="134.0" layoutY="10.0" mnemonicParsing="false" text="Histograma">
+            <Button onAction="#buildHistogram" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" text="Histograma">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
