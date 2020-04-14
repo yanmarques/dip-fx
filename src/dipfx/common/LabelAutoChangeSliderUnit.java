@@ -7,8 +7,9 @@ public class LabelAutoChangeSliderUnit extends SimpleSliderUnit {
     private Label label;
 
     public LabelAutoChangeSliderUnit(Slider slider, Label label) {
-        super(slider);
+        super(slider, false);
         this.label = label;
+        this.setValue(0);
     }
 
     public void setValue(int value, boolean updateSlider) {

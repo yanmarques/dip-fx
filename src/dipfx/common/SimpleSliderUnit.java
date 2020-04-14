@@ -4,6 +4,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 
 import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SimpleSliderUnit implements Unit {
@@ -13,10 +14,16 @@ public class SimpleSliderUnit implements Unit {
     private int value;
     private Consumer<Unit> unitConsumer;
 
-    public SimpleSliderUnit(Slider slider) {
+    public SimpleSliderUnit(Slider slider, boolean initToZero) {
         this.slider = slider;
         this.slider.setOnMouseReleased(this::onValueChanged);
-        this.setValue(0);
+        if (initToZero) {
+            this.setValue(0);
+        }
+    }
+
+    public SimpleSliderUnit(Slider slider) {
+        this(slider, true);
     }
 
     @Override
@@ -30,7 +37,7 @@ public class SimpleSliderUnit implements Unit {
     }
 
     public void setValue(int value, boolean updateSlider) {
-        logger.fine("recv new value: " + value);
+        logger.log(Level.FINE, "recv new value: {0}", value);
         this.value = value;
         if (updateSlider) {
             this.slider.adjustValue(value);
