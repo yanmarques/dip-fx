@@ -99,7 +99,7 @@ abstract public class MainController {
     abstract public BaseHistogramController getHistogramController();
 
     public void initialize() {
-        logger.info("initiliazing services...");
+        logger.info("initializing services...");
 
         this.setupServices();
 
