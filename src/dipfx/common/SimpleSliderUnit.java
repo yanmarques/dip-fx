@@ -7,12 +7,12 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SimpleSliderUnit implements Unit {
+public class SimpleSliderUnit implements Unit<Integer> {
     private static Logger logger = LogUtil.getLogger(LabelAutoChangeSliderUnit.class.getName());
 
     private Slider slider;
     private int value;
-    private Consumer<Unit> unitConsumer;
+    private Consumer<Unit<Integer>> unitConsumer;
 
     public SimpleSliderUnit(Slider slider, boolean initToZero) {
         this.slider = slider;
@@ -27,16 +27,16 @@ public class SimpleSliderUnit implements Unit {
     }
 
     @Override
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 
     @Override
-    public void setValue(int value) {
+    public void setValue(Integer value) {
         this.setValue(value, true);
     }
 
-    public void setValue(int value, boolean updateSlider) {
+    public void setValue(Integer value, boolean updateSlider) {
         logger.log(Level.FINE, "recv new value: {0}", value);
         this.value = value;
         if (updateSlider) {
@@ -45,7 +45,7 @@ public class SimpleSliderUnit implements Unit {
     }
 
     @Override
-    public void setOnValueChanged(Consumer<Unit> unitConsumer) {
+    public void setOnValueChanged(Consumer<Unit<Integer>> unitConsumer) {
         this.unitConsumer = unitConsumer;
     }
 

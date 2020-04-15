@@ -206,7 +206,7 @@ abstract public class MainController {
         this.withMultiImgFilter("sub-multi-image");
     }
 
-    public void thresholding(Unit thresholdUnit) {
+    public void thresholding(Unit<Integer> thresholdUnit) {
         this.withFilter("threshold");
     }
 
@@ -395,7 +395,7 @@ abstract public class MainController {
         this.greenSliderUnit = new LabelAutoChangeSliderUnit(this.greenSlider, this.lblGreenScale);
         this.blueSliderUnit = new LabelAutoChangeSliderUnit(this.blueSlider, this.lblBlueScale);
 
-        ArrayList<Unit> sliders = new ArrayList<>();
+        ArrayList<Unit<Integer>> sliders = new ArrayList<>();
         sliders.add(this.redSliderUnit);
         sliders.add(this.greenSliderUnit);
         sliders.add(this.blueSliderUnit);
@@ -415,7 +415,7 @@ abstract public class MainController {
         this.srcMultiImgUnit = new SimpleSliderUnit(this.srcMultiImgSlider);
         this.dstMultiImgUnit = new SimpleSliderUnit(this.dstMultiImgSlider);
 
-        ArrayList<Unit> sliders = new ArrayList<>();
+        ArrayList<Unit<Integer>> sliders = new ArrayList<>();
         sliders.add(this.srcMultiImgUnit);
         sliders.add(this.dstMultiImgUnit);
 

@@ -2,8 +2,8 @@ package dipfx.common;
 
 import java.util.function.Consumer;
 
-public interface Unit {
-    int getValue();
-    void setValue(int value);
-    void setOnValueChanged(Consumer<Unit> unitConsumer);
+public interface Unit<T> {
+    T getValue();
+    void setValue(T value);
+    void setOnValueChanged(Consumer<Unit<T>> unitConsumer);
 }
