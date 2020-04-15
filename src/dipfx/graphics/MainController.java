@@ -4,6 +4,7 @@ import dipfx.common.*;
 import dipfx.common.multiImg.MixedContextFilter;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -47,6 +48,7 @@ abstract public class MainController {
     protected LabelAutoChangeSliderUnit thresholdUnit;
     protected SimpleSliderUnit srcMultiImgUnit;
     protected SimpleSliderUnit dstMultiImgUnit;
+    protected SimpleCheckBoxUnit ckOnlyValidPixelsUnit;
     @FXML
     private TextField txtMouseX;
     @FXML
@@ -83,6 +85,8 @@ abstract public class MainController {
     private Slider thresholdSlider;
     @FXML
     private Label lblThreshold;
+    @FXML
+    private CheckBox ckOnlyValidPixels;
 
     abstract public void setPixelColor(Image image, Color color);
 
@@ -206,6 +210,11 @@ abstract public class MainController {
         this.withMultiImgFilter("sub-multi-image");
     }
 
+    @FXML
+    public void equalizeDst() {
+        this.withFilter("equalizer");
+    }
+
     public void thresholding(Unit<Integer> thresholdUnit) {
         this.withFilter("threshold");
     }
@@ -251,6 +260,7 @@ abstract public class MainController {
         this.registerChannelSliders();
         this.registerThresholdSliders();
         this.registerMultiImageSliders();
+        this.registerEqualizeCheckBox();
     }
 
     protected void handleDisplayPixelFromContext(Image image, MouseInput mouseInput) {
@@ -432,5 +442,9 @@ abstract public class MainController {
         stage.initOwner(this.sourceView.getScene().getWindow());
         stage.setTitle("Histogramas");
         stage.show();
+    }
+
+    protected void registerEqualizeCheckBox() {
+        this.ckOnlyValidPixelsUnit = new SimpleCheckBoxUnit(this.ckOnlyValidPixels, true);
     }
 }

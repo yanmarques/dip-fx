@@ -283,6 +283,24 @@
                   </AnchorPane>
                </content>
             </TitledPane>
+            <TitledPane animated="false" layoutX="10.0" layoutY="140.0" text="Equalização">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="CENTER" layoutX="10.399999618530273" layoutY="10.399999618530273" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <CheckBox fx:id="ckOnlyValidPixels" mnemonicParsing="false" selected="true" text="Apenas pixels válidos">
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" />
+                                 </VBox.margin>
+                              </CheckBox>
+                              <Button mnemonicParsing="false" onAction="#equalizeDst" text="Equalizar" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
         </panes>
       </Accordion>
       <HBox layoutX="552.0" layoutY="468.0" AnchorPane.bottomAnchor="26.0">
@@ -302,7 +320,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button onAction="#buildHistogram" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" text="Histograma">
+            <Button layoutX="134.0" layoutY="10.0" mnemonicParsing="false" onAction="#buildHistogram" text="Histograma">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
