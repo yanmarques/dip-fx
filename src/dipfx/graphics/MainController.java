@@ -215,7 +215,7 @@ abstract public class MainController {
         this.withFilter("equalizer");
     }
 
-    public void thresholding(Unit<Integer> thresholdUnit) {
+    public void onThreshold(Unit<Integer> thresholdUnit) {
         this.withFilter("threshold");
     }
 
@@ -418,7 +418,7 @@ abstract public class MainController {
         this.thresholdSlider.setMax(255);
 
         this.thresholdUnit = new LabelAutoChangeSliderUnit(this.thresholdSlider, this.lblThreshold);
-        this.thresholdUnit.setOnValueChanged(this::thresholding);
+        this.thresholdUnit.setOnValueChanged(this::onThreshold);
     }
 
     protected void registerMultiImageSliders() {
