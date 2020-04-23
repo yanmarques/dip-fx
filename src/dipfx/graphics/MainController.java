@@ -435,6 +435,12 @@ abstract public class MainController {
     protected void openHistogramModal() throws IOException {
         Stage stage = new Stage();
         BaseHistogramController controller = this.getHistogramController();
+
+        if (controller == null) {
+            logger.log(Level.WARNING, "histogram controller not set");
+            return;
+        }
+
         controller.setSource(sourceView.getImage());
         controller.setDestination(destView.getImage());
         controller.setTarget(targetView.getImage());
